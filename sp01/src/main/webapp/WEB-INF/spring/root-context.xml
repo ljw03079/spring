@@ -28,6 +28,7 @@
 	<!-- mybatis SqlSessionFactory -->
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<!-- <property name="mapperLocations" /> 이 property가 없으면 mapper와 이름(대소문자까지)이 같아야함. -->
 	</bean>
 

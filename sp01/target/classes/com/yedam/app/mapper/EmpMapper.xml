@@ -3,29 +3,144 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.app.mapper.EmpMapper">
+  
+  	<!-- Aliase : resultType, parameterType에서 사용 -->
   	<!-- 전체조회 -->
-  	<select id="selectAllEmpInfo" resultType="com.yedam.app.emp.service.EmpVO">
+  	<select id="selectAllEmpInfo" resultType="EmpVO">
   		SELECT employee_id
   				, first_name
   				, last_name
   				, email
+  				, phone_number
   				, hire_date
   				, job_id
   				, salary
+  				, commission_pct
+  				, manager_id
+  				, department_id
   		FROM employees
   		ORDER BY employee_id
   	</select>
   	
   	<!-- 단건조회 -->
-  	<select id="selectEmpInfo" resultType="com.yedam.app.emp.service.EmpVO">
+  	<select id="selectEmpInfo" resultType="EmpVO">
   		SELECT employee_id
   				, first_name
   				, last_name
   				, email
+  				, phone_number
   				, hire_date
   				, job_id
   				, salary
+  				, commission_pct
+  				, manager_id
+  				, department_id
   		FROM employees
-  		WHERE employee_id = #{employee_id}
+  		WHERE employee_id = #{employeeId}
   	</select>
+  	<!-- #{}: preparedStatement/type 고려x ''사용 , ${}: statement/type 고려 -->
+  	<!-- LIKE %, _ 
+  	 	 LIKE '%' || #{keyword} || '%' 
+  		 LIKE '%${keyword}%' -->
+  	
+  	<!-- 등록 -->
+  	<!-- selectKey(insert, update 에서만 쓰임) : parameterType의 한 변수를 덮어씀, 한개의 결과에 대한 하나의 컬럼 -->
+  	<insert id="insertEmpInfo" parameterType="EmpVO">
+  		<selectKey keyProperty="employeeId"
+  				   resultType="int"
+  				   order="BEFORE">
+  			SELECT NVL(MAX(employee_id),0) + 1
+  			FROM employees
+  		</selectKey>
+  		INSERT INTO employees
+  				(
+  					employee_id
+  					, first_name
+  					, last_name
+  					, email
+  					, hire_date
+  					, job_id
+  					<if test="salary > 0">
+  					, salary
+  					</if>
+  				)
+  				VALUES
+  				(
+  					#{employeeId}
+  					, #{firstName}
+  					, #{lastName}
+  					, #{email}
+  					<choose>
+  						<when test="hireDate != null">
+	  						, #{hireDate}
+	  					</when>
+	  					<otherwise>
+	  						, sysdate
+	  					</otherwise>
+  					</choose>
+  					, #{jobId}
+  					<if test="salary > 0">
+  					, #{salary}
+  					</if>
+  				)
+  	</insert>
+  	
+  	<!-- dynamic SQL
+  		 <if test=" "> => 조건이 true인 경우 / insert 사용시 주의(동일한 컬럼에 대해 위,아래 둘다 if문 넣어줘야 함),
+  		 <foreach> => 반복문: 배열로 넘어온 데이터처리 / mybatis 홈페이지 참고,
+  		 <choose> => 다중 if문 / true와 false 둘다 처리가 필요할 시 사용,
+  		 <trim> => 문장 구성 / if문 안의 AND나 OR을 문법 오류 생겼을때 잘라주는 태그, 독립 사용 불가 -->
+  		 
+  	<!-- 수정 : 전체조건, 전체데이터 전송 -->
+  	<update id="updateEmpInfo" parameterType="EmpVO">
+  		UPDATE employees
+  			SET
+  				first_name = #{firstName}
+  				, email    = #{email}
+  				, salary   = #{salary}
+  			WHERE employee_id = #{employeeId}
+  	</update>
+  	
+  	<!-- 수정 : 변경된 데이터만 전송 -->
+  	<!-- <trim> suffix: 뒷부분 / prefix: 앞부분
+  		 ,를 기준으로 절이 없으면 강제로 빼버림 -->
+  	<update id="updateEmpInfoDynamic" parameterType="EmpVO">
+  		<!--  
+  		UPDATE employees
+  			<trim prefix="set" suffixOverrides=",">
+  				<if test="firstName != null and !firstName.equals('')">
+  					first_name = #{firstName},
+  				</if>
+  				<if test="email != null and !email.equals('')">
+  					email    = #{email},
+  				</if>
+  				<if test="salary > 0">
+  					salary   = #{salary},
+  				</if>
+  			</trim>
+  		WHERE employee_id = #{employeeId}
+  		-->
+  		<!-- set태그 : trim 사용하지 않고 어느정도 제어를 함 -->
+  		<!-- !firstName.equals('') => 공백처리 / 상황에 따라 공백처리 해야함 -->
+  		UPDATE employees
+  			<set>
+  				<if test="firstName != null and !firstName.equals('')">
+  					first_name = #{firstName},
+  				</if>
+  				<if test="email != null and !email.equals('')">
+  					email    = #{email},
+  				</if>
+  				<if test="salary > 0">
+  					salary   = #{salary},
+  				</if>
+  			</set>
+  		WHERE employee_id = #{employeeId}
+  	</update>
+  	
+  	<!-- 삭제 -->
+  	<!-- 매개변수가 하나일 경우 이름이 매치되지 않더라도 가능 -->
+  	<delete id="deleteEmpInfo" parameterType="int">
+  		DELETE FROM employees
+  		WHERE employee_id = #{empid}
+  	</delete>
   </mapper>
