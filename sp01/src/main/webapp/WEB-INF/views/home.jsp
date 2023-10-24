@@ -18,7 +18,7 @@
 		<button type="submit">get 전송</button>
 	</form>
 	
-		<form action="reqParamTest" method="post">
+	<form action="reqParamTest" method="post">
 		<input type="text" name="employeeId">
 		<!-- <input type="text" name="lastName">  -->
 		<input type="text" name="jobId">
