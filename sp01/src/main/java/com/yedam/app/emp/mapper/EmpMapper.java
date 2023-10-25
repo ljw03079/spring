@@ -1,4 +1,4 @@
-package com.yedam.app.mapper;
+package com.yedam.app.emp.mapper;
 
 import java.util.List;
 

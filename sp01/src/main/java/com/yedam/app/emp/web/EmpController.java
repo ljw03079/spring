@@ -54,7 +54,7 @@ public class EmpController {
 		
 		String path = null;
 		if(empId > -1) {
-			path = "redirect:empInfo?employeeId="+empId;			
+			path = "redirect:empInfo?employeeId="+empId;
 		}else {
 			path = "redirect:empList";
 		}
@@ -63,7 +63,8 @@ public class EmpController {
 	}
 	
 	// Page를 호출할 때 Model 필요 Ajax는 직접 데이터 변경시키기 때문에 Model 불필요
-	// 수정 - Process => Ajax : @ResponseBody
+	// 수정 - Process => Ajax : @ResponseBody(데이터 전송 시 사용)
+	// 객체, 리스트 타입을 돌려줄때 제이슨으로 변환
 	// 1)					+ QueryString => 커맨드 객체
 	@PostMapping("empUpdate")
 	@ResponseBody
@@ -80,6 +81,7 @@ public class EmpController {
 	
 	// 삭제
 	@GetMapping("empDelete")
+	// 매개변수 타입 int -> 오류나는 경우가 있어서 Integer 사용
 	public String empDeletePreocess(@RequestParam Integer employeeId,
 									RedirectAttributes ratt) {
 		boolean result = empService.deleteEmpInfo(employeeId);
@@ -89,8 +91,16 @@ public class EmpController {
 		}else {
 			msg = "정상적으로 삭제되지않았습니다.\n정보를 확인해주시기바랍니다.\n삭제요청 : "+employeeId;
 		}
+		// 새로고침 시 사라짐, 1회성
 		ratt.addFlashAttribute("result", msg);
 		return "redirect:empList";
 	}
 	
 }
+
+// Same Origin Policy, CORS -> 화면과 관련, 브라우저 정책
+// <CORS>
+// [1] Server => Spring Security
+// [2] client => Server끼리 통신
+// --> java의 HTTP 서버 통신
+// javascript에서 ajax로 서버 통신하는 방법뿐만 아니라 java에서도 서버 통신 가능

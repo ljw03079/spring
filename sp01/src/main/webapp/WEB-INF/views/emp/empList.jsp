@@ -45,5 +45,12 @@
 			</c:forEach>
 		</tbody>
 	</table>
+	<script>
+		// alert(`${result }`);
+		// compile 순서 : JSP -> Servlet -> java => html -> css -> javascript
+		// javascript, html 내에서 빈 EL 태그 사용 금지, 주석 안에서도 사용 금지 (JSP 태그이므로 먼저 읽어들임)
+		let msg = `${result }`;
+		if(msg != '') alert(msg);
+	</script>
 </body>
 </html>

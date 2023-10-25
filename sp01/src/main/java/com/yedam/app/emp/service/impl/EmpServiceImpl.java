@@ -7,9 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yedam.app.emp.mapper.EmpMapper;
 import com.yedam.app.emp.service.EmpService;
 import com.yedam.app.emp.service.EmpVO;
-import com.yedam.app.mapper.EmpMapper;
 
 @Service
 public class EmpServiceImpl implements EmpService{

@@ -35,6 +35,7 @@
 		</div>
 		<div>
 			<button type="button" id="updateBtn">수정</button>
+			<!-- onclick : 페이지 넘기는 간단한 이벤트에만 사용, 나머지는 addEventListener -->
 			<button type="button" onclick="location.href='empDelete?employeeId=${empInfo.employeeId}'">삭제</button>
 			<button type="button" onclick="location.href='empList'">목록</button>
 		</div>

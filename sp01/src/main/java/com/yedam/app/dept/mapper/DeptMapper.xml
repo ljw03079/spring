@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.yedam.app.mapper.DeptMapper">
+  <mapper namespace="com.yedam.app.dept.mapper.DeptMapper">
   
 	  <!-- 전체조회 -->
 	  <select id="selectAllDeptInfo" resultType="DeptVO">
