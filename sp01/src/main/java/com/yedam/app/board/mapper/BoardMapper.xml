@@ -37,9 +37,9 @@
 				   resultType="int"
 				   order="BEFORE">
 			SELECT NVL(MAX(bno),1000) + 1
-			FROM board		   
+			FROM board
 		</selectKey>
-		INSERT INTO
+		INSERT INTO board
 			(
 				bno
 				, title

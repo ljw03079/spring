@@ -47,20 +47,17 @@ public class BoardController {
 	// 등록 - 처리 : boardInsert / PARAMETER - BoardVO / RETURN - 전체조회 다시 호출
 	@PostMapping("boardInsert")
 	public String insertBoardInfoProcess(BoardVO boardVO) {
-		int bno = boardService.insertBoard(boardVO);
-		
-		String path = null;
-		if(bno > -1) {
-			path = "redirect:boardInfo?boardNo="+bno;
-		}else {
-			path = "redirect:boardList";
-		}
-		return path;
+		boardService.insertBoard(boardVO);
+		// 등록성공이든 실패이든 나중에 처리하고 안정적으로 전체조회로 돌림
+		// 다시 호출 : redirect 콜론을 기준으로 앞에는 명령어 뒤에는 컨트롤러 포맷으로 알아들음.
+		return "redirect:boardList";
 	}
 	
 	// 수정 - 페이지 : URI - boardUpdate / PARAMETER - BoardVO / RETURN - board/boardUpdate
 	@GetMapping("boardUpdate")
-	public String boardUpdateForm(BoardVO boardVO) {
+	public String boardUpdateForm(BoardVO boardVO, Model model) {
+		BoardVO findVO = boardService.getBoard(boardVO);
+		model.addAttribute("boardInfo", findVO);
 		return "board/boardUpdate";
 	}
 	
@@ -77,9 +74,9 @@ public class BoardController {
 		int result = boardService.deleteBoard(bno);
 		String msg = null;
 		if(result == 1) {
-			msg = "정상적으로 삭제되었습니다.\n삭제대상 : "+bno;
+			msg = "정상적으로 삭제되었습니다.";
 		}else {
-			msg = "정상적으로 삭제되지 않았습니다.\n정보를 확인해주시기 바랍니다.\n삭제요청 : "+bno;
+			msg = "정상적으로 삭제되지 않았습니다.";
 		}
 		ratt.addFlashAttribute("result", msg);
 		return "redirect:boardList";

@@ -22,6 +22,12 @@
   <li class="nav-item">
     <a class="nav-link" href="${pageContext.request.contextPath }/empInsert">사원정보등록</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="${pageContext.request.contextPath }/boardList">익명게시판조회</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="${pageContext.request.contextPath }/boardInsert">익명게시글등록</a>
+  </li>
   <!-- 상대경로, 현재페이지 기준으로 불러옴. app 내의 경로이므로 정상적으로 페이지 불러옴
   <li class="nav-item">
     <a class="nav-link" href="empInsert">사원정보등록</a>
