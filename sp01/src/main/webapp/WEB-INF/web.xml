@@ -22,6 +22,14 @@
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<multipart-config>
+			<max-file-size>20771520</max-file-size>
+			<max-request-size>20971520</max-request-size>
+			<!-- location / file-size-threshold 중 하나는 지정해줘야함. -->
+			<file-size-threshold>0</file-size-threshold>
+			<!-- Spring 파일업로드 multipart Resolver => content-type : multipart/form data -->
+		</multipart-config>
+		<!-- pon.xml 버전 3.0 이상 => servlet-context beans 등록 이후 web.xml에서 크기 지정 -->
 	</servlet>
 		
 	<servlet-mapping>
