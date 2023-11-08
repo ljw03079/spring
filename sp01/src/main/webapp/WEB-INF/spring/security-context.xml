@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 경로지정 / css파일은 적용하지 않겠다. -->
+	<sec:http pattern="/css/**" security="none" />
+	
+	<!-- 인증과 인가가 필요한 것들의 경로 / 순서가 중요 -->
+	<sec:http>
+		<!-- permitAll => 인증이든 인가든 허가 받은 사람 -->
+		<sec:intercept-url pattern="/top.jsp" access="permitAll()" />
+		<!-- 관리자 권한 여부 체크 -->
+		<sec:intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')" />
+		<!-- 인증 받은 사람 체크 -->
+		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+		<!-- security가 대신 로그인, 우리가 만들 필요 없음. -->
+		<sec:form-login default-target-url="/top.jsp" />
+		<!-- 토큰과 세션을 깨뜨리는걸 security가 함. -->
+		<sec:logout logout-url="/logout" logout-success-url="/top.jsp" />
+		<sec:csrf disabled="false" />
+		<!-- csrf : flase => 단순한 로그아웃도 동작되지 않음. => 보안을 좀 더 강화 -->
+	</sec:http>
+	
+	<!-- authorities: 우리가 주는 권한 -->
+	<sec:authentication-manager>
+		<sec:authentication-provider user-service-ref="userDetailsService">
+			<!-- <sec:user-service>
+				 테스트시 {noop} : 비밀번호 암호화 하지 않겠다. 
+				<sec:user name="user" password="{noop}1234" authorities="ROLE_USER" />
+				<sec:user name="admin" password="{noop}1234" authorities="ROLE_ADMIN" />
+			</sec:user-service> -->
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+
+</beans>
