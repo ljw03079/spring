@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>타임리프 테스트</title>
+</head>
+<body>
+	<div>
+		<table>
+			<tr>
+				<th>${...}</th>
+				<td th:text="${info}" />
+			</tr>
+			<tr>
+				<th>@{...}</th>
+				<td><a th:href="@{selectInfo}" th:text="|조회|"></a></td>
+			</tr>
+			<!-- 반복문 감싸주는 태그 th:block, 특별한 의미는 없지만 감싸고 있는 th:each가 발생시키는 문제를 막기 위해 사용 -->
+			<th:block th:each="num : ${#numbers.sequence(1,5)}">
+				<tr>
+					<!-- 대괄호 => th:text와 같음 -->
+					<th th:if="${num != 3}">[[ ${num} ]]</th>
+				</tr>
+			</th:block>
+				<tr>
+					<th>표준 HTML 주석</th>
+					<!-- <td th:text="${info}" />  -->
+				</tr>
+				<tr>
+					<th>타임리프 파서 주석</th>
+					<!--/* <td th:text="${info}" /> */-->
+				</tr>
+				<tr>
+					<th>타임리프 프로토타입 주석</th>
+					<!--/*/ <td th:text="${info}" /> /*/-->
+				</tr>
+		</table>
+	</div>
+	<div th:replace="~{footer :: footerFragment}"></div>
+</body>
+</html>

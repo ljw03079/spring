@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>사원 정보 등록</title>
+</head>
+<body>
+	<form th:action="@{/empInsert}" method="POST" th:object="${empVO}">
+		<div>
+			<label id="eid">사원번호</label>
+			<input type="text" id="eid" th:field="*{employeeId}">
+		</div>
+		<div>
+			<label id="ename">이름</label>
+			<input type="text" id="ename" th:field="*{lastName}">
+		</div>
+		<div>
+			<label id="email">이메일</label>
+			<input type="text" id="email" th:field="*{email}">
+		</div>
+		<div>
+			<label id="hDate">입사일</label>
+			<input type="text" id="hDate" th:field="*{hireDate}">
+		</div>
+		<div>
+			<label id="job">업무</label>
+			<input type="text" id="job" th:field="*{jobId}">
+		</div>
+		<div>
+			<button type="submit">등록</button>
+			<button type="reset">취소</button>
+		</div>
+	</form>
+</body>
+</html>
