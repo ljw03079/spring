@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+	<div class="container">
+		<h3>ajax로 데이터 보내기</h3>
+		<div class="border mb-2 p-2">
+			<h6>요청데이터가 하나인 경우</h6>
+			<input id="txtStr" placeholder="firstName"  size="7">
+			<button type="button" class="btn btn-success" id="btnStr">등록</button>
+		</div>
+
+		<div class="border mb-2 p-2">
+			<h6>요청데이터가 여러 개인 경우(query String)</h6>
+			<form name="frmVO">
+				<input name="firstName" placeholder="firstName" size="7"> 
+				<input name="lastName" placeholder="lastName" size="7">
+				<button type="button" class="btn btn-success" id="btnVO">등록</button>
+			</form>
+		</div>
+		
+		<div class="border mb-2 p-2">
+			<h6>요청데이터가 여러 개인 경우(json String)</h6>
+			<form name="frmJson">
+				<input name="firstName" placeholder="firstName" size="7"> 
+				<input name="lastName" placeholder="lastName" size="7">
+				<button type="button" class="btn btn-success" id="btnJson">등록</button>
+			</form>
+		</div>
+
+		<div class="border mb-2 p-2">
+			<h6>요청데이터가 리스트인 경우<button type="button" class="btn btn-success" id="btnList">전송</button></h6>
+			<form name="frmList">
+				<input name="emps[0].firstName" placeholder="firstName" size="7"> 
+				<input name="emps[0].lastName" placeholder="lastName" size="7">
+				<br>
+				<input name="emps[1].firstName" placeholder="firstName" size="7"> 
+				<input name="emps[1].lastName" placeholder="lastName" size="7">
+				<br>				
+			</form>
+		</div>
+		
+
+		<div class="border mb-2 p-2">
+			<h6>요청데이터 리스트를 JSON형식으로 보내는 경우<button type="button" class="btn btn-success" id="btnListJson">전송</button></h6>
+			<div class="frmListJson">
+				<div class="border-bottom empRow">
+					<input name="firstName" placeholder="firstName" size="7"> 
+					<input name="lastName" placeholder="lastName" size="7">
+				</div>
+				<div class="border-bottom empRow">
+					<input name="firstName" placeholder="firstName" size="7"> 
+					<input name="lastName" placeholder="lastName" size="7">
+				</div>
+				
+			</div>
+		</div>		
+		<div id="divResult"></div>
+	</div>
+	<script>
+	$("#btnStr").on("click", ()=>{
+		const firstName = $("#txtStr").val();
+		const dept = 10;
+		$.ajax({
+			url:"reqStr",
+			method : "post",
+			//data:"firstName=" + $("#txtStr").val() + "&dept=10"
+			//data : {firstName : $("#txtStr").val(), lastName : "choi"}
+			data : {firstName, dept}
+		}).done(result => appendDiv(result.firstName));
+	})
+	
+	$("#btnVO").on("click", ()=>{
+		$.ajax({
+			url:"reqVO",
+			method : "post",
+			data : $("form[name='frmVO']").serialize()
+		}).done(result => appendDiv(result.firstName + "," + result.lastName));
+	})	
+	
+		
+	$("#btnJson").on("click", ()=>{
+		/* let data = {};
+		let arr = $("form[name='frmJson']").serializeArray();
+		$(arr).each((i,item) => {  data[item.name] = item.value;	}) */
+		const firstName = $("form[name='frmJson']").find("[name=firstName]").val();
+		const lastName = $("form[name='frmJson'] [name=firstName]").val();
+		$.ajax({
+			url:"reqVOJson",
+			method : "post",
+			contentType : "application/json",
+			data : JSON.stringify({firstName, lastName})
+		}).done(result => appendDiv(result.firstName + "," + result.lastName));
+	})	
+	
+	$("#btnList").on("click", ()=>{
+		$.ajax({
+			url:"reqList",
+			method : "post",
+			data : $("form[name='frmList']").serialize()
+		}).done(result => appendDiv(result[0].firstName + "," + result[0].lastName));
+	})
+	
+	$("#btnListJson").on("click", ()=>{
+		//전송할 데이터 만들기
+		let data = [];
+		let departmentId = $("[name=departmentId]").val()
+		$(".frmListJson .empRow").each((i,item)=>{
+			const firstName = $(item).find("[name=firstName]").val(); 
+			const lastName = $(item).find("[name=lastName]").val();
+			data.push({firstName, lastName, departmentId})
+		})
+		$.ajax({
+			url:"reqListJson",
+			method : "post",
+			contentType : "application/json",
+			data : JSON.stringify(data)
+		}).done(result => appendDiv(result[0].firstName + "," + result[0].lastName));
+	})	
+	
+	function appendDiv(str){
+		$("#divResult").append($("<div>").html(str).append("<hr>"))
+	}
+	</script>
+</body>
+</html>
